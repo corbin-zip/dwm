@@ -212,7 +212,7 @@ static Key keys[] = {
     {MODKEY,             XK_semicolon, shiftview, {.i = 1}},
     {MODKEY | ShiftMask, XK_semicolon, shifttag, {.i = 1}},
     {MODKEY,             XK_apostrophe, togglescratch, {.ui = 1}},
-    {MODKEY | ShiftMask, xk_apostrophe, togglesmartgaps, {0}},
+    {MODKEY | ShiftMask, XK_apostrophe, togglesmartgaps, {0}},
     {MODKEY,             XK_Return, spawn, {.v = termcmd}},
     {MODKEY | ShiftMask, XK_Return, togglescratch, {.ui = 0}},
 
@@ -247,7 +247,7 @@ static Key keys[] = {
     {MODKEY,             XK_Page_Down, shiftview, {.i = +1}},
     {MODKEY | ShiftMask, XK_Page_Down, shifttag, {.i = +1}},
 
-    {MODKEY,             XK_Insert, spawn, 
+    {MODKEY,             XK_Insert, spawn,
      SHCMD("xdotool type $(grep -v '^#' ~/.local/share/larbs/snippets | dmenu "
            "-i -l 50 | cut -d' ' -f1)")},
     {MODKEY | ShiftMask, XK_Insert, spawn, SHCMD("keepmenu -d ~/sdrive/22.kdbx")},
