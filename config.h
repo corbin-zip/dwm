@@ -278,9 +278,9 @@ static Key keys[] = {
     {MODKEY,             XK_Delete,      spawn, {.v = (const char *[]){"dmenurecord", "kill", NULL}}},
     {MODKEY,             XK_Scroll_Lock, spawn, SHCMD("killall screenkey || screenkey &")},
 
-    {0, XF86XK_AudioMute, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioLowerVolume, spawn, SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
+	{0, XF86XK_AudioMute, spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)")},
+	{0, XF86XK_AudioRaiseVolume, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%+; kill -44 $(pidof dwmblocks)")},
+	{0, XF86XK_AudioLowerVolume, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioPrev, spawn, {.v = (const char *[]){"mpc", "prev", NULL}}},
     {0, XF86XK_AudioNext, spawn, {.v = (const char *[]){"mpc", "next", NULL}}},
     /*{ 0, XF86XK_AudioPause,		spawn,		{.v = (const char*[]){"mpc", "pause", NULL } } },*/
@@ -290,6 +290,7 @@ static Key keys[] = {
     {0, XF86XK_AudioForward, spawn, {.v = (const char *[]){"mpc", "seek", "+10", NULL}}},
     {0, XF86XK_AudioMedia, spawn, {.v = (const char *[]){TERMINAL, "-e", "ncmpcpp", NULL}}},
     {0, XF86XK_AudioMicMute, spawn, SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle")},
+
     /* { 0, XF86XK_PowerOff,		spawn,		{.v = (const char*[]){ "sysact", NULL } } }, */
     {0, XF86XK_Calculator, spawn, {.v = (const char *[]){TERMINAL, "-e", "bc", "-l", NULL}}},
     {0, XF86XK_Sleep, spawn, {.v = (const char *[]){"sudo", "-A", "zzz", NULL}}},
