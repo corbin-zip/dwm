@@ -3,7 +3,7 @@
 /* Constants */
 #define TERMINAL "st"
 #define TERMCLASS "St"
-#define BROWSER "librewolf"
+#define BROWSER "firefox"
 
 /* appearance */
 static unsigned int borderpx = 3; /* border pixel of windows */
@@ -39,15 +39,22 @@ typedef struct {
 const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "120x34", NULL};
 const char *spcmd2[] = {TERMINAL, "-n", "spcalc", "-f", "monospace:size=16", "-g", "50x20", "-e", "bc", "-lq", NULL};
 const char *spcmd3[] = {TERMINAL, "-n", "spkeep", "-e", "sh", "-c", "QT_SCALE_FACTOR=0.6 keepassxc", NULL};
+const char *spcmd4[] = {TERMINAL, "-n", "spanki", "anki", NULL};
+const char *spcmd5[] = {TERMINAL, "-n", "spgpt", "chat-gpt", NULL};
+const char *spcmd6[] = {TERMINAL, "-n", "spobs", "obsidian", NULL};
+
 static Sp scratchpads[] = {
     /* name    cmd  */
     {"spterm", spcmd1},
     {"spcalc", spcmd2},
     {"spkeep", spcmd3},
+    {"spanki", spcmd4},
+    {"spgpt" , spcmd5},
+    {"spobs" , spcmd6},
 };
 
 /* tagging */
-static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+static const char *tags[] = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
 
 static const Rule rules[] = {
     /* xprop(1):
@@ -63,6 +70,9 @@ static const Rule rules[] = {
     {TERMCLASS, "spterm",     NULL,            SPTAG(0),    1,         1,          0,         -1},
     {TERMCLASS, "spcalc",     NULL,            SPTAG(1),    1,         1,          0,         -1},
     {TERMCLASS, "spkeep",     NULL,            SPTAG(2),    1,         1,          0,         -1},
+    {TERMCLASS, "spanki",     NULL,            SPTAG(3),    1,         1,          0,         -1},
+    {TERMCLASS, "spgpt",      NULL,            SPTAG(4),    1,         1,          0,         -1},
+    {TERMCLASS, "spobs",      NULL,            SPTAG(5),    1,         1,          0,         -1},
 };
 
 /* layout(s) */
@@ -173,7 +183,7 @@ static Key keys[] = {
     {MODKEY,             XK_q, killclient, {0}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = (const char *[]){"sysact", NULL}}},
     {MODKEY,             XK_w, spawn, {.v = (const char *[]){BROWSER, NULL}}},
-    {MODKEY | ShiftMask, XK_w, spawn, {.v = (const char *[]){TERMINAL, "-e", "sudo", "nmtui", NULL}}},
+    {MODKEY | ShiftMask, XK_w, spawn, {.v = (const char *[]){TERMINAL, "-e", "calcurse", NULL}}},
     {MODKEY,             XK_e, spawn, SHCMD(TERMINAL " -e neomutt ; pkill -RTMIN+12 dwmblocks")},
     {MODKEY | ShiftMask, XK_e, spawn, SHCMD(TERMINAL " -e abook")},
     {MODKEY,             XK_r, spawn, {.v = (const char *[]){TERMINAL, "-e", "lfub", NULL}}},
@@ -194,7 +204,12 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_bracketleft, spawn, {.v = (const char *[]){"mpc", "seek", "-60", NULL}}},
     {MODKEY,             XK_bracketright, spawn, {.v = (const char *[]){"mpc", "seek", "+10", NULL}}},
     {MODKEY | ShiftMask, XK_bracketright, spawn, {.v = (const char *[]){"mpc", "seek", "+60", NULL}}},
-    {MODKEY, XK_backslash, togglescratch, {.ui = 2}},
+
+    {MODKEY,             XK_backslash, togglescratch, {.ui = 2}},
+
+
+    {MODKEY,             XK_Home,      togglescratch, {.ui = 4}}, // gpt
+    {MODKEY | ShiftMask, XK_Home,      togglescratch, {.ui = 3}}, // anki
 
     {MODKEY,             XK_a, togglegaps, {0}},
     {MODKEY | ShiftMask, XK_a, defaultgaps, {0}},
@@ -227,7 +242,10 @@ static Key keys[] = {
     {MODKEY,             XK_b, spawn, {.v = (const char *[]){"bookmarkthis", NULL}}},
     /*{MODKEY|ShiftMask, XK_b,		spawn,		{.v = (const char*[]){ "dmenubookmark", NULL } } },*/
     /*{MODKEY,           XK_n,      spawn,     {.v = (const char *[]){TERMINAL, "-e", "nvim", "-c", "VimwikiIndex", NULL}}},*/
-    {MODKEY,             XK_n,     spawn,     {.v = (const char *[]){"obsidian_launch", NULL}}},
+    /*{MODKEY,           XK_n,     spawn,     {.v = (const char *[]){"obsidian_launch", NULL}}},*/
+
+    {MODKEY,             XK_n,     togglescratch, {.ui = 5}}, // obs
+
     {MODKEY | ShiftMask, XK_n, spawn,     SHCMD(TERMINAL " -e newsboat ; pkill -RTMIN+6 dwmblocks")},
     {MODKEY,             XK_m, spawn, {.v = (const char *[]){TERMINAL, "-e", "ncmpcpp", NULL}}},
     {MODKEY | ShiftMask, XK_m, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
@@ -253,26 +271,28 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_Insert, spawn, SHCMD("keepmenu -d ~/sdrive/22.kdbx")},
 
     {MODKEY,             XK_F1, spawn, SHCMD("groff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -")},
-    {MODKEY,             XK_F2, spawn, {.v = (const char *[]){"randomstoic", NULL}}}, /*updated from tutorialvids*/
+    {MODKEY,             XK_F2, spawn, {.v = (const char *[]){"randomstoic", NULL}}},
     {MODKEY,             XK_F3, spawn, {.v = (const char *[]){"displayselect", NULL}}},
     {MODKEY,             XK_F4, spawn, SHCMD(TERMINAL " -e pulsemixer; kill -44 $(pidof dwmblocks)")},
     {MODKEY,             XK_F5, xrdb, {.v = NULL}},
-    /*{ MODKEY,			 XK_F6, spawn, {.v = (const char*[]){ "torwrap", NULL } } },*/
+    //{ MODKEY,			 XK_F6, spawn, {.v = (const char*[]){ "torwrap", NULL } } },
     {MODKEY,             XK_F6, spawn, {.v = (const char *[]){"dmenukill", NULL}}},
     {MODKEY,             XK_F7, spawn, {.v = (const char *[]){"td-toggle", NULL}}},
     {MODKEY,             XK_F8, spawn, {.v = (const char *[]){"mw", "-Y", NULL}}},
-    {MODKEY,             XK_F9, spawn, {.v = (const char *[]){"dmenumount", NULL}}},
+    {MODKEY,             XK_F9, spawn, {.v = (const char *[]){"mounter", NULL}}},
     {MODKEY,             XK_F10, spawn, {.v = (const char *[]){"unmounter", NULL}}},
     {MODKEY,             XK_F11, spawn,
      SHCMD("mpv --untimed --no-cache --no-osc --no-input-default-bindings "
            "--profile=low-latency --input-conf=/dev/null --title=webcam $(ls "
            "/dev/video[0,2,4,6,8] | tail -n 1)")},
     {MODKEY, XK_F12, spawn, SHCMD("remaps")},
+
+    {MODKEY | ShiftMask, XK_Insert, spawn, SHCMD("keepmenu -d ~/sdrive/22.kdbx")},
     {MODKEY, XK_space, zoom, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
 
-    {0,                  XK_Print,       spawn, SHCMD("maim pic-full-$(date '+%y%m%d-%H%M-%S').png")},
-    {ShiftMask,          XK_Print,       spawn, {.v = (const char *[]){"maimpick", NULL}}},
+    {0,                  XK_Print,       spawn, {.v = (const char *[]){"maimpick", NULL}}},
+    {ShiftMask,          XK_Print,       spawn, SHCMD("maim pic-full-$(date '+%y%m%d-%H%M-%S').png")},
     {MODKEY,             XK_Print,       spawn, {.v = (const char *[]){"dmenurecord", NULL}}},
     {MODKEY | ShiftMask, XK_Print,       spawn, {.v = (const char *[]){"dmenurecord", "kill", NULL}}},
     {MODKEY,             XK_Delete,      spawn, {.v = (const char *[]){"dmenurecord", "kill", NULL}}},
