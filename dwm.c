@@ -53,7 +53,7 @@
   (mask & ~(numlockmask | LockMask) &                                          \
    (ShiftMask | ControlMask | Mod1Mask | Mod2Mask | Mod3Mask | Mod4Mask |      \
     Mod5Mask))
-#define GETINC(X) ((X)-2000)
+#define GETINC(X) ((X) - 2000)
 #define INC(X) ((X) + 2000)
 #define INTERSECT(x, y, w, h, m)                                               \
   (MAX(0, MIN((x) + (w), (m)->wx + (m)->ww) - MAX((x), (m)->wx)) *             \
@@ -378,6 +378,7 @@ static Window root, wmcheckwin;
 static xcb_connection_t *xcon;
 
 /* configuration, allows nested code to access above variables */
+#define DWM_C
 #include "config.h"
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
