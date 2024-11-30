@@ -239,7 +239,7 @@ static Key keys[] = {
     {MODKEY,             XK_x, incrgaps, {.i = -3}},
     /*{MODKEY|ShiftMask, XK_x,		spawn,		SHCMD("") } */
     {MODKEY,             XK_c, spawn, {.v = (const char *[]){"signal-desktop", NULL}}},
-    {MODKEY | ShiftMask, XK_c, spawn, {.v = (const char *[]){"discord", NULL}}},
+    {MODKEY | ShiftMask, XK_c, spawn, {.v = (const char *[]){"vesktop", NULL}}},
     /*{MODKEY|ShiftMask, XK_v,		spawn,		SHCMD("") } */
     {MODKEY | ShiftMask, XK_b, togglebar, {0}},
     {MODKEY,             XK_b, spawn, {.v = (const char *[]){"bookmarkthis", NULL}}},
