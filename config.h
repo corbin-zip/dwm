@@ -40,9 +40,9 @@ typedef struct {
     const char *name;
     const void *cmd;
 } Sp;
-const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "120x34", NULL};
+const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "90x30", NULL};
 const char *spcmd2[] = {TERMINAL, "-n", "spcalc", "-f", "monospace:size=16", "-g", "50x20", "-e", "bc", "-lq", NULL};
-const char *spcmd3[] = {TERMINAL, "-n", "spkeep", "-e", "sh", "-c", "QT_SCALE_FACTOR=0.6 keepassxc", NULL};
+const char *spcmd3[] = {TERMINAL, "-n", "spkeep", "-e", "sh", "-c", "QT_SCALE_FACTOR=0.8 keepassxc", NULL};
 const char *spcmd4[] = {TERMINAL, "-n", "spanki", "anki", NULL};
 const char *spcmd5[] = {TERMINAL, "-n", "spgpt", "chat-gpt", NULL};
 const char *spcmd6[] = {TERMINAL, "-n", "spobs", "obsidian", NULL};
