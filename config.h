@@ -209,8 +209,8 @@ static Key keys[] = {
     {MODKEY,             XK_bracketright, spawn, {.v = (const char *[]){"mpc", "seek", "+10", NULL}}},
     {MODKEY | ShiftMask, XK_bracketright, spawn, {.v = (const char *[]){"mpc", "seek", "+60", NULL}}},
 
-    {MODKEY,             XK_backslash, togglescratch, {.ui = 2}},
-
+    {MODKEY,             XK_backslash, togglescratch, {.ui = 2}}, // keepassxc
+    {MODKEY | ShiftMask, XK_backslash, spawn, {.v = (const char *[]){"keepmenu", NULL}}},
 
     {MODKEY,             XK_Home,      togglescratch, {.ui = 4}}, // gpt
     {MODKEY | ShiftMask, XK_Home,      togglescratch, {.ui = 3}}, // anki
