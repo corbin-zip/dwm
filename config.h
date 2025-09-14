@@ -221,8 +221,10 @@ static Key keys[] = {
     /* {MODKEY|ShiftMask,XK_s,		spawn,		SHCMD("")} */
     {MODKEY,             XK_d, spawn, {.v = (const char *[]){"dmenu_run", NULL}}},
     {MODKEY | ShiftMask, XK_d, spawn, {.v = (const char *[]){"keepmenu", NULL}}},
-    {MODKEY,             XK_f, togglefullscr, {0}},
-    {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}},
+    // {MODKEY,             XK_f, togglefullscr, {0}},
+    {MODKEY,             XK_f, setlayout, {.v = &layouts[5]}}, /* monocle */
+    {MODKEY | ShiftMask, XK_f, togglefullscr, {0}},
+    // {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}},
     {MODKEY,             XK_g, shiftview, {.i = -1}},
     {MODKEY | ShiftMask, XK_g, shifttag, {.i = -1}},
     {MODKEY,             XK_h, setmfact, {.f = -0.05}},
