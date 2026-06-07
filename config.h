@@ -175,10 +175,10 @@ static Key keys[] = {
     TAGKEYS(XK_9, 8)
     {MODKEY,             XK_0, view, {.ui = ~0}},
     {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
-    {MODKEY,             XK_minus, spawn, SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_minus, spawn, SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
-    {MODKEY,             XK_equal, spawn,SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_equal, spawn, SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
+    {MODKEY,             XK_minus, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_minus, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 15%-; kill -44 $(pidof dwmblocks)")},
+    {MODKEY,             XK_equal, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_equal, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 15%+; kill -44 $(pidof dwmblocks)")},
     {MODKEY,             XK_BackSpace, spawn, {.v = (const char *[]){"sysact", NULL}}},
     {MODKEY | ShiftMask, XK_BackSpace, spawn, {.v = (const char *[]){"lockscreen", NULL}}},
 
@@ -254,7 +254,7 @@ static Key keys[] = {
 
     {MODKEY | ShiftMask, XK_n, spawn,     SHCMD(TERMINAL " -e newsboat ; pkill -RTMIN+6 dwmblocks")},
     {MODKEY,             XK_m, spawn, {.v = (const char *[]){TERMINAL, "-e", "ncmpcpp", NULL}}},
-    {MODKEY | ShiftMask, XK_m, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_m, spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)")},
 
     {MODKEY,             XK_comma, focusmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
