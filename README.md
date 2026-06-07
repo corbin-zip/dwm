@@ -32,5 +32,3 @@ git clone https://github.com/LukeSmithxyz/dwm.git
 cd dwm
 sudo make install
 ```
-
-There is also a `PKGBUILD` usable on distributions with pacman. Run `makepkg -si` instead of `sudo make install`.
