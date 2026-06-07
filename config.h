@@ -180,7 +180,7 @@ static Key keys[] = {
     {MODKEY,             XK_equal, spawn,SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
     {MODKEY | ShiftMask, XK_equal, spawn, SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
     {MODKEY,             XK_BackSpace, spawn, {.v = (const char *[]){"sysact", NULL}}},
-    {MODKEY | ShiftMask, XK_BackSpace, spawn, {.v = (const char *[]){"slock", NULL}}},
+    {MODKEY | ShiftMask, XK_BackSpace, spawn, {.v = (const char *[]){"lockscreen", NULL}}},
 
     {MODKEY, XK_Tab, view, {0}},
     /* {MODKEY|ShiftMask,XK_Tab,		spawn,		SHCMD("") }, */
