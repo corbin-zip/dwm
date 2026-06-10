@@ -2524,11 +2524,27 @@ int xerrorstart(Display *dpy, XErrorEvent *ee) {
 }
 
 void xrdb(const Arg *arg) {
-  loadxrdb();
+  Client *c;
+  Monitor *m;
   int i;
+
+  load_xresources();
+  loadxrdb();
   for (i = 0; i < LENGTH(colors); i++) {
     drw_scm_free(drw, scheme[i], 3);
     scheme[i] = drw_scm_create(drw, colors[i], 3);
+  }
+  /* propagate reloaded per-monitor settings and refresh border colors;
+   * the focused window gets the SchemeSel border via focus() below */
+  for (m = mons; m; m = m->next) {
+    m->mfact = mfact;
+    m->nmaster = nmaster;
+    m->gappih = gappih;
+    m->gappiv = gappiv;
+    m->gappoh = gappoh;
+    m->gappov = gappov;
+    for (c = m->clients; c; c = c->next)
+      XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
   }
   focus(NULL);
   arrange(NULL);
