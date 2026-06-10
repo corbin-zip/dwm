@@ -510,10 +510,12 @@ void arrange(Monitor *m) {
       showhide(m->stack);
   if (m) {
     arrangemon(m);
-    restack(m);
-  } else
+    restack(m); /* syncs */
+  } else {
     for (m = mons; m; m = m->next)
       arrangemon(m);
+    XSync(dpy, False);
+  }
 }
 
 void arrangemon(Monitor *m) {
@@ -1532,7 +1534,6 @@ void resizeclient(Client *c, int x, int y, int w, int h) {
   XConfigureWindow(dpy, c->win, CWX | CWY | CWWidth | CWHeight | CWBorderWidth,
                    &wc);
   configure(c);
-  XSync(dpy, False);
 }
 
 void resizemouse(const Arg *arg) {
