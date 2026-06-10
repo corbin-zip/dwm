@@ -980,7 +980,8 @@ void expose(XEvent *e) {
 void focus(Client *c) {
   if (!c || !ISVISIBLE(c)) {
     for (c = selmon->stack;
-         c && (!ISVISIBLE(c) || (c->issticky && !selmon->sel->issticky));
+         c && (!ISVISIBLE(c) ||
+               (c->issticky && selmon->sel && !selmon->sel->issticky));
          c = c->snext)
       ;
 
@@ -1235,11 +1236,11 @@ void loadxrdb() {
         XRDB_LOAD_COLOR("dwm.color8", selbordercolor);
         XRDB_LOAD_COLOR("dwm.color4", selbgcolor);
         XRDB_LOAD_COLOR("dwm.color0", selfgcolor);
+        XrmDestroyDatabase(xrdb);
       }
     }
+    XCloseDisplay(display);
   }
-
-  XCloseDisplay(display);
 }
 
 void manage(Window w, XWindowAttributes *wa) {
@@ -2527,12 +2528,10 @@ void xrdb(const Arg *arg) {
 void zoom(const Arg *arg) {
   Client *c = selmon->sel;
 
-  if (!selmon->lt[selmon->sellt]->arrange ||
-      (selmon->sel && selmon->sel->isfloating))
+  if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
     return;
-  if (c == nexttiled(selmon->clients))
-    if (!c || !(c = nexttiled(c->next)))
-      return;
+  if (c == nexttiled(selmon->clients) && !(c = nexttiled(c->next)))
+    return;
   pop(c);
 }
 
@@ -2557,7 +2556,9 @@ void resource_load(XrmDatabase db, char *name, enum resource_type rtype,
   if (!(ret.addr == NULL || strncmp("String", type, 64))) {
     switch (rtype) {
     case STRING:
-      strcpy(sdst, ret.addr);
+      /* all STRING dsts are char[8] color arrays ("#RRGGBB") */
+      if (strnlen(ret.addr, 8) <= 7)
+        strcpy(sdst, ret.addr);
       break;
     case INTEGER:
       *idst = strtoul(ret.addr, NULL, 10);
@@ -2576,13 +2577,14 @@ void load_xresources(void) {
   ResourcePref *p;
 
   display = XOpenDisplay(NULL);
-  resm = XResourceManagerString(display);
-  if (!resm)
+  if (!display)
     return;
-
-  db = XrmGetStringDatabase(resm);
-  for (p = resources; p < resources + LENGTH(resources); p++)
-    resource_load(db, p->name, p->type, p->dst);
+  resm = XResourceManagerString(display);
+  if (resm && (db = XrmGetStringDatabase(resm))) {
+    for (p = resources; p < resources + LENGTH(resources); p++)
+      resource_load(db, p->name, p->type, p->dst);
+    XrmDestroyDatabase(db);
+  }
   XCloseDisplay(display);
 }
 
