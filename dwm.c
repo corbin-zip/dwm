@@ -28,12 +28,14 @@
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <locale.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/select.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -365,8 +367,9 @@ static void (*handler[LASTEvent])(XEvent *) = {
     [PropertyNotify] = propertynotify,
     [UnmapNotify] = unmapnotify};
 static Atom wmatom[WMLast], netatom[NetLast];
-static int restart = 0;
-static int running = 1;
+static volatile sig_atomic_t restart = 0;
+static volatile sig_atomic_t running = 1;
+static int sigpipe[2] = {-1, -1}; /* wakes the event loop from handlers */
 static Cur *cursor[CurLast];
 static Clr **scheme;
 static Display *dpy;
@@ -1622,11 +1625,33 @@ void restack(Monitor *m) {
 
 void run(void) {
   XEvent ev;
-  /* main event loop */
+  fd_set fds;
+  char buf[64];
+  int xfd = ConnectionNumber(dpy);
+  int nfds = MAX(xfd, sigpipe[0]) + 1;
+
+  /* main event loop; select() on the X connection and the signal pipe
+   * so SIGHUP/SIGTERM take effect without waiting for the next X event */
   XSync(dpy, False);
-  while (running && !XNextEvent(dpy, &ev))
-    if (handler[ev.type])
-      handler[ev.type](&ev); /* call handler */
+  while (running) {
+    while (running && XPending(dpy)) {
+      XNextEvent(dpy, &ev);
+      if (handler[ev.type])
+        handler[ev.type](&ev); /* call handler */
+    }
+    if (!running)
+      break;
+    FD_ZERO(&fds);
+    FD_SET(xfd, &fds);
+    FD_SET(sigpipe[0], &fds);
+    if (select(nfds, &fds, NULL, NULL, NULL) == -1) {
+      if (errno == EINTR)
+        continue;
+      die("dwm: select failed:");
+    }
+    while (read(sigpipe[0], buf, sizeof(buf)) > 0)
+      ; /* drain wake-up bytes */
+  }
 }
 
 void runAutostart(void) { system("killall -q dwmblocks; dwmblocks &"); }
@@ -1813,6 +1838,13 @@ void setup(void) {
   while (waitpid(-1, NULL, WNOHANG) > 0)
     ;
 
+  if (pipe(sigpipe) == -1)
+    die("dwm: pipe failed:");
+  for (i = 0; i < 2; i++)
+    if (fcntl(sigpipe[i], F_SETFD, FD_CLOEXEC) == -1 ||
+        fcntl(sigpipe[i], F_SETFL, O_NONBLOCK) == -1)
+      die("dwm: fcntl failed:");
+
   signal(SIGHUP, sighup);
   signal(SIGTERM, sigterm);
 
@@ -1911,13 +1943,21 @@ void showhide(Client *c) {
 }
 
 void sighup(int unused) {
+  int e = errno;
   Arg a = {.i = 1};
   quit(&a);
+  while (write(sigpipe[1], "", 1) == -1 && errno == EINTR)
+    ;
+  errno = e;
 }
 
 void sigterm(int unused) {
+  int e = errno;
   Arg a = {.i = 0};
   quit(&a);
+  while (write(sigpipe[1], "", 1) == -1 && errno == EINTR)
+    ;
+  errno = e;
 }
 
 #ifndef __OpenBSD__
