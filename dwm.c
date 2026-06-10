@@ -2442,13 +2442,17 @@ pid_t getparentprocess(pid_t p) {
 #if defined(__linux__)
   FILE *f;
   char buf[256];
+  char *s;
   snprintf(buf, sizeof(buf) - 1, "/proc/%u/stat", (unsigned)p);
 
   if (!(f = fopen(buf, "r")))
     return (pid_t)0;
 
-  if (fscanf(f, "%*u %*s %*c %u", (unsigned *)&v) != 1)
-    v = (pid_t)0;
+  /* the comm field may contain spaces; parse the ppid after its closing
+   * paren rather than relying on whitespace-delimited fields */
+  if (!fgets(buf, sizeof(buf), f) || !(s = strrchr(buf, ')')) ||
+      sscanf(s + 1, " %*c %u", &v) != 1)
+    v = 0;
   fclose(f);
 #elif defined(__FreeBSD__)
   struct kinfo_proc *proc = kinfo_getproc(p);
