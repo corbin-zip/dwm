@@ -2034,11 +2034,17 @@ void togglescratch(const Arg *arg) {
     } else {
       /* Same monitor; toggle visibility */
       unsigned int newtagset = selmon->tagset[selmon->seltags] ^ scratchtag;
-      if (newtagset) {
-        selmon->tagset[selmon->seltags] = newtagset;
-        focus(NULL);
-        arrange(selmon);
+      if (!newtagset) {
+        /* scratchpad was the only tag in view; fall back to the
+         * previous tagset so the toggle can still hide it */
+        selmon->seltags ^= 1;
+        newtagset = selmon->tagset[selmon->seltags] & ~scratchtag;
+        if (!newtagset)
+          newtagset = 1;
       }
+      selmon->tagset[selmon->seltags] = newtagset;
+      focus(NULL);
+      arrange(selmon);
       if (ISVISIBLE(c)) {
         focus(c);
         restack(selmon);
