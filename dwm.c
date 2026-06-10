@@ -388,6 +388,9 @@ struct NumTags {
   char limitexceeded[LENGTH(tags) > 31 ? -1 : 1];
 };
 
+/* tag label widths, measured once in setup(); tags and fonts are static */
+static unsigned int tagw[LENGTH(tags)];
+
 /* function implementations */
 void applyrules(Client *c) {
   const char *class, *instance;
@@ -605,7 +608,7 @@ void buttonpress(XEvent *e) {
       /* do not reserve space for vacant tags */
       if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
         continue;
-      x += TEXTW(tags[i]);
+      x += tagw[i];
     } while (ev->x >= x && ++i < LENGTH(tags));
     if (i < LENGTH(tags)) {
       click = ClkTagBar;
@@ -918,7 +921,7 @@ void drawbar(Monitor *m) {
     if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
       continue;
 
-    w = TEXTW(tags[i]);
+    w = tagw[i];
     drw_setscheme(
         drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
     drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
@@ -1850,6 +1853,8 @@ void setup(void) {
     die("no fonts could be loaded.");
   lrpad = drw->fonts->h;
   bh = drw->fonts->h + 2;
+  for (i = 0; i < LENGTH(tags); i++)
+    tagw[i] = TEXTW(tags[i]);
   updategeom();
   /* init atoms */
   utf8string = XInternAtom(dpy, "UTF8_STRING", False);
