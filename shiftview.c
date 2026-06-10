@@ -15,6 +15,8 @@ shiftview(const Arg *arg)
 			tagmask = tagmask | c->tags;
 
 	shifted.ui = selmon->tagset[selmon->seltags] & ~SPTAGMASK;
+	if (!shifted.ui) /* only scratchpad tags in view; shifting would loop forever */
+		shifted.ui = 1;
 	if (arg->i > 0) /* left circular shift */
 		do {
 			shifted.ui = (shifted.ui << arg->i)
