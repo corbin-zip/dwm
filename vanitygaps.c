@@ -401,7 +401,7 @@ deck(Monitor *m)
 
 	sx = mx = m->wx + ov;
 	sy = my = m->wy + oh;
-	sh = mh = m->wh - 2*oh - ih * (MIN(n, m->nmaster) - 1);
+	sh = mh = m->wh - 2*oh - ih * (MAX(MIN(n, m->nmaster), 1) - 1);
 	sw = mw = m->ww - 2*ov;
 
 	if (m->nmaster && n > m->nmaster) {
