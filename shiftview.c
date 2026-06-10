@@ -38,30 +38,27 @@ shifttag(const Arg *arg)
 {
 	Arg a;
 	Client *c;
-	unsigned visible = 0;
-	int i = arg->i;
-	int count = 0;
-	int nextseltags, curseltags = selmon->tagset[selmon->seltags];
+	unsigned int visible = 0;
+	int shift, count = 0;
+	int nextseltags, curseltags = selmon->tagset[selmon->seltags] & ~SPTAGMASK;
+
+	if (!curseltags) /* only scratchpad tags in view; nothing to shift from */
+		return;
 
 	do {
-		if(i > 0) // left circular shift
-			nextseltags = (curseltags << i) | (curseltags >> (LENGTH(tags) - i));
+		/* reduce the cumulative shift to a valid rotation amount */
+		shift = MOD(arg->i * ++count, (int)LENGTH(tags));
+		nextseltags = ((curseltags << shift)
+		   | (curseltags >> (LENGTH(tags) - shift))) & ~SPTAGMASK;
 
-		else // right circular shift
-			nextseltags = (curseltags >> - i) | (curseltags << (LENGTH(tags) + i));
-		nextseltags &= ~SPTAGMASK;
-
-                // Check if tag is visible
+		/* check if any client is on the shifted tags */
 		for (c = selmon->clients; c && !visible; c = c->next)
-			if (nextseltags & c->tags) {
+			if (nextseltags & c->tags)
 				visible = 1;
-				break;
-			}
-		i += arg->i;
-	} while (!visible && ++count < 10);
+	} while (!visible && count < (int)LENGTH(tags));
 
-	if (count < 10) {
-		a.i = nextseltags;
+	if (visible) {
+		a.ui = nextseltags;
 		tag(&a);
 	}
 }
