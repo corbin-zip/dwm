@@ -294,7 +294,6 @@ static Key keys[] = {
            "/dev/video[0,2,4,6,8] | tail -n 1)")},
     {MODKEY, XK_F12, spawn, SHCMD("remaps")},
 
-    {MODKEY | ShiftMask, XK_Insert, spawn, SHCMD("keepmenu -d ~/sdrive/22.kdbx")},
     {MODKEY, XK_space, zoom, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
 
