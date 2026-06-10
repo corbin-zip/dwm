@@ -340,6 +340,7 @@ static pid_t winpid(Window w);
 static const char broken[] = "broken";
 static char stext[256];
 static char rawstext[256];
+static int statusw;
 static int dwmblockssig;
 pid_t dwmblockspid = 0;
 static int screen;
@@ -610,7 +611,7 @@ void buttonpress(XEvent *e) {
       click = ClkLtSymbol;
     } else if (ev->x < x + blw + bmw) {
       click = ClkMonNum;
-    } else if (ev->x > (x = selmon->ww - TEXTW(stext) + lrpad - 2)) {
+    } else if (ev->x > (x = selmon->ww - statusw)) {
       click = ClkStatusText;
 
       char *text = rawstext;
@@ -893,10 +894,12 @@ void drawbar(Monitor *m) {
   unsigned int i, occ = 0, urg = 0;
   Client *c;
 
+  if (!m->showbar)
+    return;
+
   /* draw status first so it can be overdrawn by tags later */
   if (m == selmon || statusall) { /* status is only drawn on selected monitor */
-    // testing: drw_setscheme(drw, scheme[SchemeNorm]);
-    tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
+    tw = statusw;
     drw_setscheme(drw, scheme[SchemeNorm]);
     drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
   }
@@ -974,7 +977,7 @@ void expose(XEvent *e) {
   XExposeEvent *ev = &e->xexpose;
 
   if (ev->count == 0 && (m = wintomon(ev->window)))
-    statusall ? drawbars() : drawbar(m);
+    drawbar(m);
 }
 
 void focus(Client *c) {
@@ -1128,7 +1131,6 @@ int gettextprop(Window w, Atom atom, char *text, unsigned int size) {
 }
 
 void grabbuttons(Client *c, int focused) {
-  updatenumlockmask();
   {
     unsigned int i, j;
     unsigned int modifiers[] = {0, LockMask, numlockmask,
@@ -1321,7 +1323,7 @@ void mappingnotify(XEvent *e) {
   XMappingEvent *ev = &e->xmapping;
 
   XRefreshKeyboardMapping(ev);
-  if (ev->request == MappingKeyboard)
+  if (ev->request == MappingKeyboard || ev->request == MappingModifier)
     grabkeys();
 }
 
@@ -1487,7 +1489,7 @@ void propertynotify(XEvent *e) {
     if (ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]) {
       updatetitle(c);
       if (c == c->mon->sel)
-        statusall ? drawbars() : drawbar(c->mon);
+        drawbar(c->mon);
     }
     if (ev->atom == netatom[NetWMWindowType])
       updatewindowtype(c);
@@ -1599,7 +1601,7 @@ void restack(Monitor *m) {
   XEvent ev;
   XWindowChanges wc;
 
-  statusall ? drawbars() : drawbar(m);
+  drawbar(m);
   if (!m->sel)
     return;
   if (m->sel->isfloating || !m->lt[m->sellt]->arrange)
@@ -1779,7 +1781,7 @@ void setlayout(const Arg *arg) {
   if (selmon->sel)
     arrange(selmon);
   else
-    statusall ? drawbars() : drawbar(selmon);
+    drawbar(selmon);
 }
 
 /* arg > 1.0 will set mfact absolutely */
@@ -2314,6 +2316,7 @@ void updatestatus(void) {
     strcpy(stext, "dwm-" VERSION);
   else
     copyvalidchars(stext, rawstext);
+  statusw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
   statusall ? drawbars() : drawbar(selmon);
 }
 
