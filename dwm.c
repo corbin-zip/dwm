@@ -2662,6 +2662,9 @@ int main(int argc, char *argv[]) {
     die("usage: dwm [-v]");
   if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
     fputs("warning: no locale support\n", stderr);
+  /* startx sessions get no XDG_CURRENT_DESKTOP; announce ourselves to
+   * xdg-aware children (a display manager's value takes precedence) */
+  setenv("XDG_CURRENT_DESKTOP", "dwm", 0);
   if (!(dpy = XOpenDisplay(NULL)))
     die("dwm: cannot open display");
   if (!(xcon = XGetXCBConnection(dpy)))
