@@ -246,7 +246,7 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_c, spawn, {.v = (const char *[]){"vesktop", NULL}}},
     /*{MODKEY|ShiftMask, XK_v,		spawn,		SHCMD("") } */
     {MODKEY | ShiftMask, XK_b, togglebar, {0}},
-    {MODKEY,             XK_b, spawn, {.v = (const char *[]){"bookmarkthis", NULL}}},
+    {MODKEY,             XK_b, spawn, {.v = (const char *[]){"dmenuselfhost", NULL}}},
     /*{MODKEY|ShiftMask, XK_b,		spawn,		{.v = (const char*[]){ "dmenubookmark", NULL } } },*/
     /*{MODKEY,           XK_n,      spawn,     {.v = (const char *[]){TERMINAL, "-e", "nvim", "-c", "VimwikiIndex", NULL}}},*/
     /*{MODKEY,           XK_n,     spawn,     {.v = (const char *[]){"obsidian_launch", NULL}}},*/
@@ -298,9 +298,8 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
 
     {0,                  XK_Print,       spawn, {.v = (const char *[]){"maimpick", NULL}}},
-    {ShiftMask,          XK_Print,       spawn, SHCMD("maim pic-full-$(date '+%y%m%d-%H%M-%S').png")},
-    {MODKEY,             XK_Print,       spawn, {.v = (const char *[]){"dmenurecord", NULL}}},
-    {MODKEY | ShiftMask, XK_Print,       spawn, {.v = (const char *[]){"dmenurecord", "kill", NULL}}},
+    {ShiftMask,          XK_Print,       spawn, {.v = (const char *[]){"qrclip", NULL}}},
+    {MODKEY | ShiftMask, XK_Print,       spawn, {.v = (const char *[]){"dmenurecord", NULL}}},
     {MODKEY,             XK_Delete,      spawn, {.v = (const char *[]){"dmenurecord", "kill", NULL}}},
     {MODKEY,             XK_Scroll_Lock, spawn, SHCMD("killall screenkey || screenkey &")},
 
@@ -333,8 +332,8 @@ static Key keys[] = {
                  "synclient TouchpadOff=1")},
     {0, XF86XK_TouchpadOff, spawn, {.v = (const char *[]){"synclient", "TouchpadOff=1", NULL}}},
     {0, XF86XK_TouchpadOn, spawn, {.v = (const char *[]){"synclient", "TouchpadOff=0", NULL}}},
-    {0, XF86XK_MonBrightnessUp, spawn, {.v = (const char *[]){"xbacklight", "-inc", "15", NULL}}},
-    {0, XF86XK_MonBrightnessDown, spawn, {.v = (const char *[]){"xbacklight", "-dec", "15", NULL}}},
+    {0, XF86XK_MonBrightnessUp, spawn, {.v = (const char *[]){"brightnessctl", "set", "10%+", NULL}}},
+    {0, XF86XK_MonBrightnessDown, spawn, {.v = (const char *[]){"brightnessctl", "set", "10%-", NULL}}},
 
     /* { MODKEY|Mod4Mask,              XK_h,      incrgaps,       {.i = +1 } }, */
     /* { MODKEY|Mod4Mask,              XK_l,      incrgaps,       {.i = -1 } }, */
