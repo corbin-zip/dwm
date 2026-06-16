@@ -213,8 +213,11 @@ static Key keys[] = {
     {MODKEY,             XK_backslash, togglescratch, {.ui = 2}}, // keepassxc
     {MODKEY | ShiftMask, XK_backslash, spawn, {.v = (const char *[]){"keepmenu", NULL}}},
 
-    {MODKEY,             XK_Home,      togglescratch, {.ui = 4}}, // gpt
-    {MODKEY | ShiftMask, XK_Home,      togglescratch, {.ui = 3}}, // anki
+    {MODKEY,             XK_Home,      togglebar, {0}},                                          // toggle bar
+    {MODKEY | ShiftMask, XK_Home,      togglescratch, {.ui = 4}}, // gpt
+
+    {MODKEY,             XK_End,       spawn, {.v = (const char *[]){"dmenuselfhost", NULL}}},   // selfhost bookmarks
+    {MODKEY | ShiftMask, XK_End,       togglescratch, {.ui = 3}}, // anki
 
     {MODKEY,             XK_a, togglegaps, {0}},
     {MODKEY | ShiftMask, XK_a, defaultgaps, {0}},
@@ -244,9 +247,13 @@ static Key keys[] = {
     /*{MODKEY|ShiftMask, XK_x,		spawn,		SHCMD("") } */
     {MODKEY,             XK_c, spawn, {.v = (const char *[]){"signal-desktop", NULL}}},
     {MODKEY | ShiftMask, XK_c, spawn, {.v = (const char *[]){"vesktop", NULL}}},
-    /*{MODKEY|ShiftMask, XK_v,		spawn,		SHCMD("") } */
-    {MODKEY | ShiftMask, XK_b, togglebar, {0}},
-    {MODKEY,             XK_b, spawn, {.v = (const char *[]){"dmenuselfhost", NULL}}},
+    // notification center: reuse sb-dnd's click handlers (button 2 = open
+    // full history, button 1 = toggle DND), so launch geometry and toggle
+    // logic stay single-sourced in the bar module.
+    {MODKEY,             XK_v, spawn, SHCMD("BLOCK_BUTTON=2 sb-dnd")},
+    {MODKEY | ShiftMask, XK_v, spawn, SHCMD("BLOCK_BUTTON=1 sb-dnd")},
+    {MODKEY | ShiftMask, XK_b, spawn, {.v = (const char *[]){"dmenuselfhost", NULL}}},
+    {MODKEY,             XK_b, spawn, {.v = (const char *[]){"dmenuddg", NULL}}},
     /*{MODKEY|ShiftMask, XK_b,		spawn,		{.v = (const char*[]){ "dmenubookmark", NULL } } },*/
     /*{MODKEY,           XK_n,      spawn,     {.v = (const char *[]){TERMINAL, "-e", "nvim", "-c", "VimwikiIndex", NULL}}},*/
     /*{MODKEY,           XK_n,     spawn,     {.v = (const char *[]){"obsidian_launch", NULL}}},*/

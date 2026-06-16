@@ -111,7 +111,7 @@ To type capital letters, hold down the \f(CWShift\fP key\(emthat might sound obv
 .ITEM
 \f(CWMod+s\fP \(en Toggle sticky (window follows you from tag to tag)
 .ITEM
-\f(CWMod+Shift+b\fP \(en Toggle status bar
+\f(CWMod+Home\fP \(en Toggle status bar
 .LIST OFF
 .HEADING 2 "Window Layouts"
 .LI
@@ -165,9 +165,9 @@ They persist across tags and monitors\(enthe same window is shown wherever you s
 .ITEM
 \f(CWMod+\\\fP \(en KeePassXC (password manager)
 .ITEM
-\f(CWMod+Home\fP \(en ChatGPT
+\f(CWMod+Shift+Home\fP \(en ChatGPT
 .ITEM
-\f(CWMod+Shift+Home\fP \(en Anki (flashcard program)
+\f(CWMod+Shift+End\fP \(en Anki (flashcard program)
 .ITEM
 \f(CWMod+n\fP \(en Obsidian (note-taking)
 .LIST OFF
@@ -194,7 +194,15 @@ They persist across tags and monitors\(enthe same window is shown wherever you s
 .ITEM
 \f(CWMod+Shift+c\fP \(en Vesktop (Discord client)
 .ITEM
-\f(CWMod+b\fP \(en bookmarkthis (bookmark current URL via dmenu)
+\f(CWMod+b\fP \(en dmenuddg (DuckDuckGo search prompt in a new browser window; bangs like \f(CW!a\fP work)
+.ITEM
+\f(CWMod+Shift+b\fP \(en dmenuselfhost (pick a self-hosted service bookmark)
+.ITEM
+\f(CWMod+End\fP \(en dmenuselfhost (same as above)
+.ITEM
+\f(CWMod+v\fP \(en Notification center (open full notification history)
+.ITEM
+\f(CWMod+Shift+v\fP \(en Toggle Do Not Disturb
 .ITEM
 \f(CWMod+Shift+d\fP \(en keepmenu (access KeePass database via dmenu)
 .ITEM
@@ -278,11 +286,11 @@ Recordings are saved to \f(CW~\fP with a timestamp in the filename so nothing is
 .ITEM
 \f(CWPrintScreen\fP \(en maimpick (interactive: screenshot region, window, or full screen)
 .ITEM
-\f(CWShift+PrintScreen\fP \(en Immediate full screenshot to file
+\f(CWShift+PrintScreen\fP \(en qrclip (decode a QR code in a selected region to the clipboard)
 .ITEM
-\f(CWMod+PrintScreen\fP \(en dmenurecord (select type of audio/video recording)
+\f(CWMod+Shift+PrintScreen\fP \(en dmenurecord (select type of audio/video recording)
 .ITEM
-\f(CWMod+Shift+PrintScreen\fP or \f(CWMod+Delete\fP \(en Stop any active recording
+\f(CWMod+Delete\fP \(en Stop any active recording
 .ITEM
 \f(CWMod+Scroll Lock\fP \(en Toggle screenkey overlay (shows keypresses on screen)
 .LIST OFF
@@ -290,6 +298,8 @@ Recordings are saved to \f(CW~\fP with a timestamp in the filename so nothing is
 .LI
 .ITEM
 \f(CWMod+BackSpace\fP \(en sysact: power menu (lock, logout, reboot, shutdown, sleep, etc.)
+.ITEM
+\f(CWMod+Shift+q\fP \(en sysact: power menu (same as \f(CWMod+BackSpace\fP)
 .ITEM
 \f(CWMod+Shift+BackSpace\fP \(en Lock screen immediately
 .ITEM
@@ -349,7 +359,7 @@ Common media and laptop keys are bound to sensible defaults.
 .ITEM
 \f(CWXf86AudioMedia\fP \(en ncmpcpp
 .ITEM
-\f(CWXf86MonBrightnessUp\fP / \f(CWXf86MonBrightnessDown\fP \(en Screen brightness +15%/\(en15%
+\f(CWXf86MonBrightnessUp\fP / \f(CWXf86MonBrightnessDown\fP \(en Screen brightness +10%/\(en10%
 .ITEM
 \f(CWXf86ScreenSaver\fP \(en Lock screen, DPMS off, pause media
 .ITEM
